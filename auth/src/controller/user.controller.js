@@ -9,6 +9,7 @@ export async function register(req, res) {
     email,
     password,
     fullname: { firstname, lastname },
+    role = "user"
   } = req.body;
 
   const userAlreadyExist = await userModel.findOne({ email });
@@ -28,20 +29,21 @@ export async function register(req, res) {
       firstname,
       lastname,
     },
+    role
   });
 
   const token = jwt.sign(
-    { id: users._id, role: users.role },
+    { id: users._id, role: users.role, fullname: users.fullname },
     config.JWT_SECRET_KEY,
     { expiresIn: "2d" },
   );
-  
-  await  publishToQueue("User_Created",{
-        id:users._id,
-        email:users.email,
-        role:users.role,
-        fullname:users.fullname
-    })
+
+  await publishToQueue("User_Created", {
+    id: users._id,
+    email: users.email,
+    role: users.role,
+    fullname: users.fullname
+  })
 
 
   res.cookie("token", token, {
@@ -65,7 +67,7 @@ export async function register(req, res) {
 }
 
 export async function GoogleAuth(req, res) {
-  
+
   const user = req.user;
 
   const userAlreadyExist = await userModel.findOne({
@@ -75,7 +77,7 @@ export async function GoogleAuth(req, res) {
 
   if (userAlreadyExist) {
     const token = jwt.sign(
-      { id: userAlreadyExist._id, role: userAlreadyExist.role },
+      { id: userAlreadyExist._id, role: userAlreadyExist.role, fullname: userAlreadyExist.fullname },
       config.JWT_SECRET_KEY,
       { expiresIn: "2d" },
     );
@@ -102,17 +104,17 @@ export async function GoogleAuth(req, res) {
   });
 
   const token = jwt.sign(
-    { id: newUser._id, role: newUser.role },
+    { id: newUser._id, role: newUser.role, fullname: newUser.fullname },
     config.JWT_SECRET_KEY,
     { expiresIn: "2d" },
   );
 
-  await  publishToQueue("User_Created",{
-        id:newUser._id,
-        email:newUser.email,
-        role:newUser.role,
-        fullname:newUser.fullname
-    })
+  await publishToQueue("User_Created", {
+    id: newUser._id,
+    email: newUser.email,
+    role: newUser.role,
+    fullname: newUser.fullname
+  })
 
 
 
@@ -122,43 +124,43 @@ export async function GoogleAuth(req, res) {
     maxAge: 1000 * 60 * 60 * 24,
   });
 
-   res.redirect("http://localhost:5173")
+  res.redirect("http://localhost:5173")
 }
 
-export async function login(req,res){
-  const{email,password}=req.body;
+export async function login(req, res) {
+  const { email, password } = req.body;
 
-  const user=await userModel.findOne({email})
-  if(!user){
+  const user = await userModel.findOne({ email })
+  if (!user) {
     return res.status(404).json({
-      message:"user not found"
+      message: "user not found"
     })
   }
-  const isMatch=await bcrypt.compare(password,user.password || "");
-  if(!isMatch){
+  const isMatch = await bcrypt.compare(password, user.password || "");
+  if (!isMatch) {
     return res.status(401).json({
-      message:"invalid credentials"
+      message: "invalid credentials"
     })
 
   }
 
-  const token=jwt.sign({id:user._id,role:user.role},config.JWT_SECRET_KEY,{expiresIn:"2d"});
+  const token = jwt.sign({ id: user._id, role: user.role, fullname: user.fullname }, config.JWT_SECRET_KEY, { expiresIn: "2d" });
 
-  res.cookie("token",token,{
-    httpOnly:true,
-    secure:true,
-    maxAge:1000*60*60*24
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    maxAge: 1000 * 60 * 60 * 24
   }
 
-    )   
-    7
-    res.status(200).json({
-      message:"user login successfully",
-user:{
-  email:user.email,
-  id:user._id,
-  role:user.role,
+  )
+  7
+  res.status(200).json({
+    message: "user login successfully",
+    user: {
+      email: user.email,
+      id: user._id,
+      role: user.role,
 
-}
-    }) 
+    }
+  })
 }
