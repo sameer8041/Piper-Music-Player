@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import * as MusicController from "../controller/music.controller.js"
-import { authArtistMiddleware } from '../middleware/auth.middleware.js';
+import * as authMiddleware from '../middleware/auth.middleware.js';
 
 
 
@@ -15,9 +15,12 @@ const uploadfields = upload.fields([{ name: "music", maxCount: 1 }, { name: "cov
 const router = express.Router();
 
 
-router.post('/upload', authArtistMiddleware, uploadfields, MusicController.musicUpload)
-router.get('/artist-musics', authArtistMiddleware, MusicController.getArtistMusic)
+router.post('/upload', authMiddleware.authArtistMiddleware, uploadfields, MusicController.musicUpload)
+router.get('/', authMiddleware.authmiddleware, MusicController.getAllMusic)
 
+router.get('/artist-musics', authMiddleware.authArtistMiddleware, MusicController.getArtistMusic)
 
+router.post('/create-playlist', authMiddleware.authArtistMiddleware, MusicController.createPlaylist)
+router.get('/playlist/:id', authMiddleware.authmiddleware, MusicController.getPlaylistById)
 
 export default router;

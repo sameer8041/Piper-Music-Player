@@ -91,8 +91,6 @@ export async function createPlaylist(req, res) {
             playlist
         })
 
-
-
     } catch (err) {
         console.log(err)
         return res.status(500).json({
@@ -100,4 +98,71 @@ export async function createPlaylist(req, res) {
         })
     }
 
+}
+
+
+export async function getAllMusic(req, res) {
+    const { skip = 0, limit = 10 } = req.query;
+
+    try {
+        const musicdocs = await musicModel.find().skip(skip).limit(limit).lean();
+
+        const musics = []
+
+        for (let music of musicdocs) {
+            music.musicUrl = await getPreSignedUrl(music.musicKey);
+            music.coverImageUrl = await getPreSignedUrl(music.coverImageKey);
+            musics.push(music)
+        }
+
+        return res.status(200).json({
+            message: "Music fetched successfully",
+            musics
+        })
+    } catch (error) {
+        console.log("Error During Fetching Music", error);
+        return res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+}
+
+export async function getPlaylistById(req, res) {
+    const { id } = req.params;
+    try {
+        const playlistdoc = await playlistModel.findById(id).lean();
+
+        if (!playlist) {
+            return res.status(404).json({
+                message: "Playlist not found"
+            })
+        }
+
+
+        const musics = []
+
+        for (let musicId of playlistdoc.musics) {
+            const playlistmusic = await musicModel.findById(musicId).lean();
+            if (playlistmusic) {
+                playlistmusic.musicUrl = await getPreSignedUrl(playlistmusic.musicKey);
+                playlistmusic.coverImageUrl = await getPreSignedUrl(playlistmusic.coverImageKey);
+                musics.push(playlistmusic)
+            }
+        }
+
+        return res.status(200).json({
+            message: "Playlist fetched successfully",
+            playlist: playlistdoc,
+            musics
+
+        })
+
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: "Internal server error"
+        })
+
+    }
 }
