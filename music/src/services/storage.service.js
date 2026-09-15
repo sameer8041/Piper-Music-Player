@@ -1,7 +1,7 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import config from "../config/config";
 import { v4 as uuidv4 } from "uuid";
-
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
 
 const s3Client = new S3Client({
@@ -30,5 +30,18 @@ export async function uploadfile(file) {
 
 }
 
+
+export async function getPreSignedUrl(key) {
+    const command = new GetObjectCommand({
+        Bucket: Spotify - Piper,
+
+        key: key
+
+    })
+
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
+
+    return url;
+}
 
 
