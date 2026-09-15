@@ -63,7 +63,7 @@
 }
 
 .music-list-header {
-  grid-template-columns: 2fr 1fr 100px;
+  grid-template-columns: 2fr 1fr 80px 100px 80px 100px;
   align-items: center;
 }
 
@@ -76,7 +76,7 @@
 
 .music-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 100px;
+  grid-template-columns: 2fr 1fr 80px 100px 80px 100px;
   align-items: center;
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius-md);
@@ -112,6 +112,13 @@
 }
 
 .music-artist-name {
+  color: var(--color-text-subdued);
+  font-size: var(--font-size-sm);
+}
+
+.music-released,
+.music-streams,
+.music-duration {
   color: var(--color-text-subdued);
   font-size: var(--font-size-sm);
 }

@@ -56,7 +56,7 @@ function ArtistDashboard() {
       console.log("Error fetching artist playlists", error);
     })
 
-  })
+  }, [])
 
   const stats = [
     { label: 'Total Plays', value: '4.1M' },
@@ -72,7 +72,7 @@ function ArtistDashboard() {
           <h1>Artist Dashboard</h1>
           <p className="subtitle">Manage your music and connect with fans.</p>
         </div>
-        <button className="btn btn-primary">Upload New Track</button>
+        <a href="/artist/dashboard/create-music" className="btn btn-primary">Upload New Track</a>
       </header>
 
       <main className="dashboard-main">
@@ -93,6 +93,9 @@ function ArtistDashboard() {
           <div className="list-header music-list-header">
             <span>Title & Artist</span>
             <span>Music URL</span>
+            <span>Duration</span>
+            <span>Released</span>
+            <span>Plays</span>
             <span>Action</span>
           </div>
           <div className="music-list">
@@ -110,6 +113,9 @@ function ArtistDashboard() {
                     Listen Audio
                   </a>
                 </div>
+                <div className="music-duration">{music.duration}</div>
+                <div className="music-released">{music.released}</div>
+                <div className="music-streams">{music.plays}</div>
                 <div className="music-action">
                   <button className="btn-manage">Manage</button>
                 </div>
@@ -132,9 +138,11 @@ function ArtistDashboard() {
                 <div className="playlist-info">
                   <h3>{playlist.title}</h3>
                   <div className="playlist-meta">
-                    <span>{playlist.artist}</span>
+                    <span>{playlist.musics?.length || 0} Tracks</span>
+                    <span>•</span>
+                    <span>{playlist.Followers} Followers</span>
                   </div>
-                  <p className="playlist-updated">{playlist.music} Tracks</p>
+                  <p className="playlist-updated">Updated {playlist.Updated}</p>
                 </div>
               </div>
             ))}
