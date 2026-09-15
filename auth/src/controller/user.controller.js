@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import config from "../../config/config.js";
 import { publishToQueue } from "../broker/broker.js";
+import { useInsertionEffect } from "react";
 
 export async function register(req, res) {
   const {
@@ -80,6 +81,7 @@ export async function GoogleAuth(req, res) {
       { id: userAlreadyExist._id, role: userAlreadyExist.role, fullname: userAlreadyExist.fullname },
       config.JWT_SECRET_KEY,
       { expiresIn: "2d" },
+
     );
 
 
@@ -90,7 +92,13 @@ export async function GoogleAuth(req, res) {
     });
 
 
-    return res.redirect("http://localhost:5173");
+
+    if (userAlreadyExist.role == "artist") {
+      return res.redirect("http://localhost:5173/artist/dashboard");
+    }
+    else if (userAlreadyExist.role === "user") {
+      return res.redirect("http://localhost:5173");
+    }
   }
 
 
