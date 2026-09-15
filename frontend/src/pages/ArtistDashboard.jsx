@@ -37,6 +37,25 @@ function ArtistDashboard() {
       console.log("Error fetching artist musics", error);
     })
 
+
+    axios.get('http://localhost:3002/api/music/playlist/artist', {
+      withCredentials: true,
+    }).then(response => {
+      setPlaylists(response.data.playlists.map(playlist => {
+        return {
+          id: playlist._id,
+          title: playlist.title,
+          artist: playlist.artist,
+          Followers: playlist.followers || 160,
+          Updated: playlist.updated ? `${Math.floor(new Date(playlist.updated).getTime() / 1000)} months` : "3 months",
+          musics: playlist.music || []
+
+        }
+      }))
+    }).catch(error => {
+      console.log("Error fetching artist playlists", error);
+    })
+
   })
 
   const stats = [

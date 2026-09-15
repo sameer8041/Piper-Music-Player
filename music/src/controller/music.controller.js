@@ -218,3 +218,30 @@ export async function getMusicById(req, res) {
         })
     }
 }
+
+
+export async function getArtistPlaylist(req, res) {
+
+    try {
+
+        const playlists = await playlistModel.find({ artistId: req.user.id }).lean();
+
+        if (playlists.length === 0) {
+            return res.status(200).json({
+                message: "No playlists found",
+                playlists: []
+            })
+        }
+
+        return res.status(200).json({
+            message: "Playlists fetched successfully",
+            playlists
+        })
+
+    } catch (error) {
+        console.log("Error during fetchig artist playlist", error);
+        return res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+}
