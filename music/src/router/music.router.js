@@ -17,10 +17,11 @@ const router = express.Router();
 
 router.post('/upload', authMiddleware.authArtistMiddleware, uploadfields, MusicController.musicUpload)
 router.get('/', authMiddleware.authmiddleware, MusicController.getAllMusic)
-
+router.get("/music-details/:id", authMiddleware.authmiddleware, MusicController.getMusicById)
 router.get('/artist-musics', authMiddleware.authArtistMiddleware, MusicController.getArtistMusic)
 
 router.post('/create-playlist', authMiddleware.authArtistMiddleware, MusicController.createPlaylist)
+router.get('/playlist', authMiddleware.authmiddleware, MusicController.getPlaylist)
 router.get('/playlist/:id', authMiddleware.authmiddleware, MusicController.getPlaylistById)
 
 export default router;

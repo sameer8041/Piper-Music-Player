@@ -100,6 +100,26 @@ export async function createPlaylist(req, res) {
 
 }
 
+export async function getPlaylist(req, res) {
+    try {
+        const playlists = await playlistModel.find({ userId: req.user.id });
+
+        return res.status(200).json({
+            message: "Playlist fetched successfully",
+            playlists
+        })
+
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            message: "Internal server error"
+        })
+
+    }
+
+}
+
 
 export async function getAllMusic(req, res) {
     const { skip = 0, limit = 10 } = req.query;
@@ -126,6 +146,9 @@ export async function getAllMusic(req, res) {
         })
     }
 }
+
+
+
 
 export async function getPlaylistById(req, res) {
     const { id } = req.params;
@@ -164,5 +187,34 @@ export async function getPlaylistById(req, res) {
             message: "Internal server error"
         })
 
+    }
+}
+
+
+export async function getMusicById(req, res) {
+
+    const { id } = req.params;
+
+    try {
+        const music = await musicModel.findById(id).lean();
+
+        if (!music) {
+            return res.status(404).json({
+                message: "Music not found"
+            })
+        }
+
+        music.musicUrl = await getPreSignedUrl(music.musicKey);
+        music.coverImageUrl = await getPreSignedUrl(music.coverImageKey);
+
+        return res.status(200).json({
+            message: "Music fetched successfully",
+            music
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error"
+        })
     }
 }
