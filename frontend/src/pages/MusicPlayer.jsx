@@ -9,7 +9,7 @@ function MusicPlayer() {
   const audioRef = useRef(null);
 
   const [music, setMusic] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
@@ -159,6 +159,7 @@ function MusicPlayer() {
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
           onEnded={() => setIsPlaying(false)}
+          autoPlay={true}
         />
       </div>
     </div>

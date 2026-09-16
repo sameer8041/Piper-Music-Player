@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
-function Home() {
+function Home({ socket }) {
   // Mock data for initial layout
   const [featuredPlaylists, setFeaturedPlaylists] = useState([
     { id: 1, title: 'Today\'s Top Hits', description: 'Jung Kook is on top of the Hottest 50!', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop' },
@@ -104,7 +104,8 @@ function Home() {
           </div>
           <div className="cards-grid">
             {recentlyAdded.map(music => (
-              <Link to={`/music/${music.id}`} key={music.id} className="music-card" style={{textDecoration: 'none'}}>
+
+              <Link onClick={() => { socket?.emit("play", { musicId: music.id }) }} to={`/music/${music.id}`} key={music.id} className="music-card" style={{ textDecoration: 'none' }}>
                 <div className="card-image-wrapper">
                   {music.coverImageUrl ? (
                     <img src={music.coverImageUrl} alt={music.title} className="card-image" />
