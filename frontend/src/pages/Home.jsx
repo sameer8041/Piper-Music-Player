@@ -104,7 +104,7 @@ function Home() {
           </div>
           <div className="cards-grid">
             {recentlyAdded.map(music => (
-              <div key={music.id} className="music-card">
+              <Link to={`/music/${music.id}`} key={music.id} className="music-card" style={{textDecoration: 'none'}}>
                 <div className="card-image-wrapper">
                   {music.coverImageUrl ? (
                     <img src={music.coverImageUrl} alt={music.title} className="card-image" />
@@ -115,7 +115,7 @@ function Home() {
                 </div>
                 <h3 className="card-title">{music.title}</h3>
                 <p className="card-subtitle">{music.artist}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </section>

@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ArtistDashboard from './pages/ArtistDashboard'
 import CreateMusic from './pages/CreateMusic'
+import MusicPlayer from './pages/MusicPlayer'
 
 function App() {
   
@@ -14,6 +15,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/artist/dashboard" element={<ArtistDashboard />} />
       <Route path="/artist/dashboard/create-music" element={<CreateMusic />} />
+      <Route path="/music/:id" element={<MusicPlayer />} />
     </Routes>
   )
 }
