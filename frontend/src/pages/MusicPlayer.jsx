@@ -151,8 +151,7 @@ function MusicPlayer() {
               </div>
             </div>
           </div>
-        </div>
-
+        </div >
         <audio
           ref={audioRef}
           src={music.musicUrl}
