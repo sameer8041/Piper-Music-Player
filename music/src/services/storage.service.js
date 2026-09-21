@@ -34,7 +34,6 @@ export async function uploadfile(file) {
 export async function getPreSignedUrl(key) {
     const command = new GetObjectCommand({
         Bucket: Spotify - Piper,
-
         key: key
 
     })
